@@ -40,7 +40,7 @@ class ChatController(
     @SwaggerResponse(responseCode = "400", description = "잘못된 요청")
     @SwaggerResponse(responseCode = "500", description = "서버 오류")
     @PostMapping("/query")
-    suspend fun sendMessage(
+    suspend fun sendMessage( // suspend 비동기 처리로 하기 위해 LLM 응답이 긴 경우가 있어.. 추론 등 상황에 따라서 블록화되는 것을 막기 위해 
         @Parameter(description = "채팅 요청 객체", required = true)
         @RequestBody request: ChatRequest
     ): ResponseEntity<ApiResponse<Map<String, Any>>> {

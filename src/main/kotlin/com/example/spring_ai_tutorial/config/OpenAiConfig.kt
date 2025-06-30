@@ -7,8 +7,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 /**
- * OpenAI API 설정
- */
+ /**
+  * OpenAI API와의 연동을 위한 설정 클래스입니다.
+  * 이 클래스에서는 OpenAI API를 사용하기 위한 API 키를 주입받고,
+  * OpenAI API 클라이언트 빈을 생성하여 스프링 컨테이너에 등록합니다.
+  * 이를 통해 애플리케이션 내에서 OpenAI API를 손쉽게 사용할 수 있습니다.
+  */
 @Configuration
 class OpenAiConfig {
     private val logger = KotlinLogging.logger {}

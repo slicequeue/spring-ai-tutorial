@@ -5,6 +5,10 @@ import io.swagger.v3.oas.models.info.Info
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * 스웨거 문서 설정을 담당하는 클래스입니다.
+ * 이 클래스에서는 스웨거 문서의 제목, 버전, 설명 등을 설정합니다.
+ */
 @Configuration
 class OpenApiConfig {
 
