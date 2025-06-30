@@ -10,6 +10,7 @@ import org.springframework.ai.chat.prompt.ChatOptions
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.openai.api.OpenAiApi
 import org.springframework.ai.openai.OpenAiChatModel
+import org.springframework.ai.anthropic.api.AnthropicApi
 import org.springframework.stereotype.Service
 
 /**
@@ -17,7 +18,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ChatService(
-    private val openAiApi: OpenAiApi
+    private val openAiApi: OpenAiApi,
+    private val antropicApi: AnthropicApi
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -59,6 +61,40 @@ class ChatService(
             return@withContext chatModel.call(prompt)
         } catch (e: Exception) {
             logger.error(e) { "OpenAI 챗 호출 중 오류 발생: ${e.message}" }
+            return@withContext null
+        }
+    }
+
+    suspend fun anthropicChat(
+        userInput: String,
+        systemMessage: String,
+        model: String = "claude-3-5-sonnet-20240620"
+    ): ChatResponse? = withContext(Dispatchers.IO) {
+        logger.debug { "Anthropic 챗 호출 시작 - 모델: $model" }
+        try {
+            // 메시지 구성
+            val messages = listOf(
+                SystemMessage(systemMessage),
+                UserMessage(userInput)
+            )
+
+            // 챗 옵션 설정
+            val chatOptions = ChatOptions.builder()
+                .model(model)
+                .temperature(0.7)
+                .build()
+
+            // 프롬프트 생성
+            val prompt = Prompt(messages, chatOptions)
+
+            // 챗 모델 생성 및 호출
+            val chatModel = org.springframework.ai.anthropic.AnthropicChatModel.builder()
+                .anthropicApi(antropicApi)
+                .build()
+
+            return@withContext chatModel.call(prompt)
+        } catch (e: Exception) {
+            logger.error(e) { "Anthropic 챗 호출 중 오류 발생: ${e.message}" }
             return@withContext null
         }
     }
