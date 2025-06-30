@@ -61,3 +61,14 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.named<JavaExec>("bootRun") {
+	if (file(".env").exists()) {
+		file(".env").readLines()
+			.filter { it.contains("=") }
+			.forEach {
+				val (key, value) = it.split("=", limit = 2)
+				environment(key.trim(), value.trim())
+			}
+	}
+}
